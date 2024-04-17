@@ -68,7 +68,18 @@ def go(config: DictConfig):
             ##################
             # Implement here #
             ##################
-            pass
+            # Download from W&B the raw dataset and apply some basic data cleaning, exporting the result to a new artifact
+            _ = mlflow.run(
+                os.path.join(hydra.utils.get_original_cwd(), "src", "data_check"),
+                "main",
+                parameters={
+                    "csv": "clean_sample.csv:latest",
+                    "ref": "clean_sample.csv:reference",
+                    "kl_threshold": config['data_check']['kl_threshold'],
+                    "min_price": config['data_check']['min_price'],
+                    "max_price": config['data_check']['max_price']
+                },
+            )
 
         if "data_split" in active_steps:
             ##################
