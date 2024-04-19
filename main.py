@@ -16,7 +16,7 @@ _steps = [
     # NOTE: We do not include this in the steps so it is not run by mistake.
     # You first need to promote a model export to "prod" before you can run this,
     # then you need to run this step explicitly
-#    "test_regression_model"
+    "test_regression_model",
 ]
 
 
@@ -131,7 +131,16 @@ def go(config: DictConfig):
             # Implement here #
             ##################
 
-            pass
+            # This step need to run explicitly after promote a model export to "prod" 
+            _ = mlflow.run(
+                f"{config['main']['ny_components_repository']}/test_regression_model",
+                "main",
+                version='main',
+                parameters={
+                    "mlflow_model": "random_forest_export:prod",
+                    "test_dataset": "test_data.csv:latest"
+                },
+            )
 
 
 if __name__ == "__main__":

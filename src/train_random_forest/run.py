@@ -54,15 +54,18 @@ def go(args):
     ######################################
     # Use run.use_artifact(...).file() to get the train and validation artifact (args.trainval_artifact)
     # and save the returned path in train_local_pat
+    logger.info("Downloading and reading train artifact")
     trainval_artifact = run.use_artifact(args.trainval_artifact)
     trainval_local_path = trainval_artifact.file()
     ######################################
 
+    logger.info("Extracting target from dataframe")
     X = pd.read_csv(trainval_local_path)
     y = X.pop("price")  # this removes the column "price" from X and puts it into y
 
     logger.info(f"Minimum price: {y.min()}, Maximum price: {y.max()}")
 
+    logger.info("Splitting train/val")
     X_train, X_val, y_train, y_val = train_test_split(
         X, y, test_size=args.val_size, stratify=X[args.stratify_by], random_state=args.random_seed
     )
@@ -176,10 +179,10 @@ def get_inference_pipeline(rf_config, max_tfidf_features):
     # 1 - A SimpleImputer(strategy="most_frequent") to impute missing values
     # 2 - A OneHotEncoder() step to encode the variable
     # YOUR CODE HERE
-    non_ordinal_categorical_preproc = Pipeline(steps=[
-        ('imputer', SimpleImputer(strategy='most_frequent')),
-        ('encoder', OneHotEncoder())
-    ])
+    non_ordinal_categorical_preproc = make_pipeline(
+        SimpleImputer(strategy="most_frequent"), OneHotEncoder()
+    )
+    
     ######################################
 
     # Let's impute the numerical columns to make sure we can handle missing values
