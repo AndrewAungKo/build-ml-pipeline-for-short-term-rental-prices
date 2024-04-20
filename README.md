@@ -104,5 +104,3 @@ You can view the project on Wandb [here](https://wandb.ai/andrewaung/nyc_airbnb)
 
 The code owners for this repository are @udacity/active-public-content. They will be automatically requested for review when you open a pull request.
 ```
-
-Please note that you'll need to replace `https://wandb.ai/your_username/your_project_name` with the actual URL of your Wandb project,
